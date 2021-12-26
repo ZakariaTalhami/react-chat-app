@@ -1,4 +1,5 @@
 export interface IMessage {
+    id?: string,
     sender: {
         name: string
     },

@@ -2,7 +2,7 @@
 import { css, jsx } from "@emotion/react";
 import { useEffect, useState } from "react";
 import { IMessage } from "../../models/chat/message";
-import { getChannelMessages } from "../../services/messegingService";
+import { getChannelMessages, sendMessageToChannel } from "../../services/messegingService";
 import MessageInput from "./MessageInput";
 import Message from "./Message";
 import { listenForMessages, messaging } from "../../services/firebase";
@@ -26,8 +26,9 @@ const Messenger = ({ channelId }: MessengerPropType) => {
 
   useEffect(() => {
     listenForMessages();
-    const messageList = getChannelMessages(channelId);
-    setMessages(messageList);
+    const messageList = getChannelMessages(channelId).then((data) =>
+      setMessages(data)
+    );
   }, []);
 
   const onSendMessage = (message: string) => {
@@ -38,6 +39,7 @@ const Messenger = ({ channelId }: MessengerPropType) => {
       body: message,
       timestamp: Date.now(),
     };
+    sendMessageToChannel(channelId, newMessage);
     setMessages([...messages, newMessage]);
   };
 
@@ -45,7 +47,7 @@ const Messenger = ({ channelId }: MessengerPropType) => {
     <div css={MessengerStyle}>
       <div>
         {messages.map((messageData) => (
-          <Message key={messageData.timestamp} message={messageData} />
+          <Message key={messageData.id} message={messageData} />
         ))}
       </div>
       <MessageInput onMessageSend={onSendMessage} />

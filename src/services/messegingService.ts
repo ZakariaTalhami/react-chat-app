@@ -1,3 +1,4 @@
+import Axios from "../axios";
 import { IMessage } from "../models/chat/message";
 
 const getTimeWithDelayInMins = (mins: number): number => {
@@ -41,6 +42,11 @@ export function getChannels(): string[] {
   return Object.keys(Channels);
 }
 
-export function getChannelMessages(channel: string): IMessage[] {
-    return Channels[channel] || [];
+export async function getChannelMessages(channel: string): Promise<IMessage[]> {
+  const res = await Axios.get('/message');
+  return res.data;
+}
+
+export async function sendMessageToChannel(channel: string, message: IMessage) {
+  const res = await Axios.post('/message', message);
 }
