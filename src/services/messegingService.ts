@@ -50,3 +50,8 @@ export async function getChannelMessages(channel: string): Promise<IMessage[]> {
 export async function sendMessageToChannel(channel: string, message: IMessage) {
   const res = await Axios.post('/message', message);
 }
+
+// TOOD: add channel arg
+export async function subscribeToChannel(token: string) {
+  const res = await Axios.post('/message/subscribe', {token});
+}
